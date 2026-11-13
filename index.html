@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dojo Café Feedback</title>
+<meta name="description" content="Feedback from the Digital Dojo Café (Data Track), 11 Nov 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500&display=swap">
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #ffffff; --fg: #1b1f27; --muted: #5f6878; --line: #e2e5eb;
+    --accent: #2f5bd3; --accent-soft: #a9bcef; --neutral: #c9ced8; --bad: #c8463d; --bad-soft: #eab0ab;
+    --ok-bg: #d8eedc; --ok-bg2: #ecf6ee; --warn-bg: #f8ecc9; --bad-bg: #f6d6d3; --warn: #c08a12;
+    --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    --body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12151b; --panel: #1a1e26; --fg: #e8ebf1; --muted: #9aa3b2; --line: #2b313c;
+      --accent: #7d9ef5; --accent-soft: #3d5291; --neutral: #4a5161; --bad: #ef7a70; --bad-soft: #7a3c37;
+      --ok-bg: #1f4a2b; --ok-bg2: #1b3324; --warn-bg: #4a3d17; --bad-bg: #4d2522; --warn: #e2b34a;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.5 var(--body); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-block: 32px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 24px; }
+  .eyebrow { margin: 0; font-size: 12px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 6px 0 0; font: 500 2.1rem/1.15 var(--display); text-wrap: balance; }
+  .lede { margin: 10px 0 0; max-width: 65ch; font-size: 15px; }
+  .lede b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  h2 { margin: 0; font: 500 1.15rem/1.3 var(--display); }
+  .note { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .card, .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; min-width: 0; }
+  .card { display: flex; flex-direction: column; gap: 10px; }
+  .card h3 { margin: 0; font-size: 14px; font-weight: 600; }
+  .q { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.4; min-height: 2.8em; }
+  .num { display: flex; align-items: baseline; gap: 6px; }
+  .big { font: 500 2.6rem/1 var(--display); font-variant-numeric: tabular-nums; }
+  .of { color: var(--muted); font-size: 13px; }
+  .sub { margin: 0; font-size: 12.5px; color: var(--muted); }
+  .sub b { color: var(--fg); font-weight: 600; }
+  .mini { display: flex; height: 14px; border-radius: 3px; overflow: hidden; gap: 1px; }
+  .mini span { display: block; height: 100%; }
+  .mini-leg { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .panel { display: flex; flex-direction: column; gap: 16px; }
+  .two { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .two { grid-template-columns: minmax(0, 1fr); } }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .chart { position: relative; display: flex; flex-direction: column; gap: 12px; }
+  .qrow { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 4px 10px; align-items: center; transition: opacity .15s; }
+  .qrow.dim { opacity: .35; }
+  .qrow .lbl { grid-column: 1 / -1; font-size: 13px; }
+  .qrow .bar { display: flex; height: 18px; gap: 1px; border-radius: 3px; overflow: hidden; }
+  .qrow .bar span { display: flex; align-items: center; justify-content: center; font-size: 11px; font-variant-numeric: tabular-nums; cursor: default; }
+  .qrow .avg { text-align: right; font-variant-numeric: tabular-nums; font-size: 14px; }
+  .qrow .avg.low { font-weight: 600; }
+  .s1 { background: var(--bad); color: var(--bg); } .s2 { background: var(--bad-soft); } .s3 { background: var(--neutral); }
+  .s4 { background: var(--accent-soft); } .s5 { background: var(--accent); color: var(--bg); }
+  .tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); box-shadow: 0 6px 20px rgba(0,0,0,.15); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.45; max-width: 240px; z-index: 5; }
+  .tip .t2 { color: var(--muted); }
+  .dur { display: flex; flex-direction: column; gap: 12px; }
+  .dur .lbl { font-size: 13px; }
+  .dur .row { display: flex; align-items: center; gap: 8px; }
+  .dur .fill { height: 14px; border-radius: 2px; }
+  .dur .val { font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .filters label { font-size: 12.5px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+  select { font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+  select:focus-visible, th:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .count { margin-left: auto; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .tw { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { text-align: left; font-weight: 500; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: var(--fg); }
+  th[aria-sort="ascending"]::after { content: " ▲"; } th[aria-sort="descending"]::after { content: " ▼"; }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.n { text-align: center; font-variant-numeric: tabular-nums; }
+  td.txt { min-width: 220px; line-height: 1.4; }
+  td.divs { color: var(--muted); min-width: 140px; }
+  .sc { display: inline-block; min-width: 24px; padding: 1px 6px; border-radius: 10px; font-variant-numeric: tabular-nums; }
+  .heat .sc { min-width: 38px; }
+  .b5 { background: var(--ok-bg); } .b4 { background: var(--ok-bg2); } .b3 { background: var(--warn-bg); } .b2, .b1 { background: var(--bad-bg); }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--line); white-space: nowrap; }
+  .pill.short { border-color: var(--warn); }
+  tr.grp td { background: color-mix(in srgb, var(--fg) 5%, transparent); color: var(--muted); padding-top: 10px; }
+  tr.grp b { color: var(--fg); font-weight: 600; }
+  details { color: var(--muted); font-size: 12.5px; }
+  summary { cursor: pointer; }
+  footer { color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Digital Dojo Café · Data Track · 11 Nov 2026</p>
+    <h1>Dojo Café Feedback</h1>
+    <p class="lede" id="lede"></p>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="Key scores"></section>
+
+  <div class="two">
+    <section class="panel">
+      <div>
+        <h2>How every question scored</h2>
+        <p class="note">Share of respondents at each point on the 1–5 scale, with the average at the right. Point at a bar for counts.</p>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="chart" id="qchart"></div>
+    </section>
+    <section class="panel">
+      <div>
+        <h2>Session length</h2>
+        <p class="note">How did you find the duration of the session?</p>
+      </div>
+      <div class="dur" id="dur"></div>
+      <p class="note">Nobody said the session was too long.</p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div>
+      <h2>Scores by division group</h2>
+      <p class="note">Divisions are grouped by their parent prefix (for example CDD-Finance, CDD-WDD and CDD-TXO count as CDD). Each cell is the group's average out of 5. Groups with one respondent reflect one person's view.</p>
+    </div>
+    <div class="tw">
+      <table class="heat">
+        <thead><tr><th>Group</th><th>Divisions</th><th>Responses</th><th>Useful</th><th>DAP</th><th>Genie understood</th><th>Confident</th><th>Challenge</th><th>Will use</th><th>Said too short</th></tr></thead>
+        <tbody id="groups"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div>
+      <h2>Responses and suggestions</h2>
+      <p class="note">One row per respondent, collected under their division group. Names and emails are left out. Click a column heading to sort.</p>
+    </div>
+    <div class="filters">
+      <label for="div">Division <select id="div"></select></label>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr id="thead">
+          <th class="sortable" tabindex="0" data-k="division">Division</th>
+          <th class="sortable" tabindex="0" data-k="usefulness">Useful</th>
+          <th class="sortable" tabindex="0" data-k="dap_application">DAP</th>
+          <th class="sortable" tabindex="0" data-k="genie_understanding">Genie understood</th>
+          <th class="sortable" tabindex="0" data-k="genie_confidence">Confident</th>
+          <th class="sortable" tabindex="0" data-k="genie_challenge">Challenge</th>
+          <th class="sortable" tabindex="0" data-k="expect_to_use">Will use</th>
+          <th class="sortable" tabindex="0" data-k="duration">Length</th>
+          <th class="sortable" tabindex="0" data-k="suggestion">Suggestion</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <details>
+    <summary>How the scores are worked out</summary>
+    <p>Each question uses a 1–5 scale (1 = lowest, 5 = highest). The average is the mean of all answers. The percentage counts answers of 4 or 5: "Very" or "Extremely useful" for usefulness, and "Agree" or "Strongly agree" for the other questions.</p>
+  </details>
+  <footer>Source: Digital Dojo Café feedback form, 14 responses. Names, emails and response IDs removed.</footer>
+</div>
+
+<script>
+const DATA = [{"division":"GITD","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"4","duration":"About right","suggestion":"na"},{"division":"RDD-EIRD","usefulness":"5","dap_application":"5","genie_understanding":"5","genie_confidence":"5","genie_challenge":"5","expect_to_use":"5","duration":"About right","suggestion":"All good! Thank you for the session it was really fun and useful"},{"division":"HRCWD-HR","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"4","duration":"Too short","suggestion":"Perhaps more on how to best prompt genie for optimal costs/ efficiency"},{"division":"CDD-Finance","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"3","duration":"Too short","suggestion":"Introduce more DAP features."},{"division":"CDD-Finance","usefulness":"3","dap_application":"4","genie_understanding":"4","genie_confidence":"3","genie_challenge":"4","expect_to_use":"3","duration":"About right","suggestion":"Keep up with the good work!"},{"division":"DSD","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"4","duration":"About right","suggestion":"Nil"},{"division":"DTO","usefulness":"5","dap_application":"5","genie_understanding":"5","genie_confidence":"5","genie_challenge":"5","expect_to_use":"4","duration":"About right","suggestion":"N.A"},{"division":"PCD-TD","usefulness":"3","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"2","duration":"About right","suggestion":"Practical use of Agents for Data Analytics"},{"division":"REACH","usefulness":"5","dap_application":"5","genie_understanding":"5","genie_confidence":"5","genie_challenge":"5","expect_to_use":"4","duration":"Too short","suggestion":"Longer sessions, more time for the missions, I lost out on top leader by 1 point lol"},{"division":"CDD-WDD","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"4","duration":"About right","suggestion":"Is great"},{"division":"CDD-TXO","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"3","duration":"About right","suggestion":"More real life cases."},{"division":"GITD","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"4","duration":"About right","suggestion":"More on how to build via Databricks apps and connect with Databricks Lakebase etc"},{"division":"CDD-WDD","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"4","genie_challenge":"4","expect_to_use":"4","duration":"About right","suggestion":"Data cleansing and preparation"},{"division":"PCD-TD","usefulness":"4","dap_application":"4","genie_understanding":"4","genie_confidence":"5","genie_challenge":"5","expect_to_use":"5","duration":"About right","suggestion":"databricks apps!"}];
+
+const QUESTIONS = [
+  ['usefulness', 'Overall usefulness'],
+  ['dap_application', 'Application of DAP'],
+  ['genie_understanding', 'Understanding of Genie'],
+  ['genie_confidence', 'Confidence using Genie'],
+  ['genie_challenge', 'Genie Analytics Challenge'],
+  ['expect_to_use', 'Expect to use Genie day-to-day'],
+];
+const METRICS = QUESTIONS.map((q) => q[0]);
+const CARDS = [
+  ['usefulness', 'Usefulness', 'Overall, how useful did you find the Digital Dojo Café?', 'rated it very or extremely useful'],
+  ['dap_application', 'Application of DAP', 'The session helped me better understand how DAP can be applied in my work.', 'agree or strongly agree'],
+  ['genie_confidence', 'Confidence using Genie', 'I feel confident I can open Genie and ask it questions on my own.', 'agree or strongly agree'],
+  ['genie_challenge', 'Genie Analytics Challenge', 'The challenge helped me apply what I learned in a practical way.', 'agree or strongly agree'],
+];
+const fmt = (v) => (v == null ? '—' : v.toFixed(2));
+const groupOf = (d) => String(d || '').split('-')[0].trim() || 'Unknown';
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
+
+const KPI = QUESTIONS.map(([metric, label]) => {
+  const v = DATA.map((r) => Number(r[metric]));
+  const c = [1, 2, 3, 4, 5].map((k) => v.filter((x) => x === k).length);
+  return { metric, label, n: v.length, avg: mean(v), top2: Math.round(((c[3] + c[4]) / v.length) * 100), counts: c };
+});
+const kpi = (m) => KPI.find((k) => k.metric === m);
+
+// Lede
+(() => {
+  const best = KPI.reduce((a, b) => (b.avg > a.avg ? b : a));
+  const worst = KPI.reduce((a, b) => (b.avg < a.avg ? b : a));
+  const p = document.getElementById('lede');
+  p.append(el('b', null, String(DATA.length)), ' participants responded. The strongest result was ' + best.label + ' (',
+    el('b', null, fmt(best.avg)), ' / 5); the weakest was ' + worst.label + ' (', el('b', null, fmt(worst.avg)), ' / 5).');
+})();
+
+// KPI cards
+(() => {
+  const host = document.getElementById('kpis');
+  CARDS.forEach(([m, title, q, subText]) => {
+    const k = kpi(m);
+    const card = el('article', 'card');
+    const num = el('div', 'num'); num.append(el('span', 'big', fmt(k.avg)), el('span', 'of', 'avg / 5'));
+    const sub = el('p', 'sub'); sub.append(el('b', null, k.top2 + '%'), ' ' + subText);
+    const bar = el('div', 'mini'); const leg = el('div', 'mini-leg');
+    bar.setAttribute('role', 'img');
+    const parts = k.counts.map((c, i) => [i + 1, c]).filter(([, c]) => c > 0);
+    bar.setAttribute('aria-label', parts.map(([s, c]) => c + ' rated ' + s).join(', '));
+    parts.forEach(([s, c]) => { const seg = el('span', 's' + s); seg.style.width = (c / k.n) * 100 + '%'; bar.append(seg); leg.append(el('span', null, c + ' × ' + s)); });
+    card.append(el('h3', null, title), el('p', 'q', q), num, sub, bar, leg);
+    host.append(card);
+  });
+})();
+
+// Legend + stacked bars
+(() => {
+  const legend = document.getElementById('legend');
+  [1, 2, 3, 4, 5].forEach((s) => { const sp = el('span'); sp.append(el('i', 's' + s), s === 1 ? '1 (low)' : s === 5 ? '5 (high)' : String(s)); legend.append(sp); });
+  const host = document.getElementById('qchart');
+  const tip = el('div', 'tip'); tip.hidden = true; host.append(tip);
+  const minAvg = Math.min(...KPI.map((k) => k.avg));
+  const rows = [];
+  KPI.forEach((k) => {
+    const row = el('div', 'qrow');
+    const bar = el('div', 'bar');
+    bar.setAttribute('role', 'img');
+    bar.setAttribute('aria-label', k.label + ': ' + k.counts.map((c, i) => c + ' rated ' + (i + 1)).filter((t) => !t.startsWith('0 ')).join(', '));
+    k.counts.forEach((c, i) => {
+      if (!c) return;
+      const s = i + 1;
+      const seg = el('span', 's' + s, c / k.n > 0.07 ? String(c) : '');
+      seg.style.width = (c / k.n) * 100 + '%';
+      seg.addEventListener('pointermove', (ev) => {
+        tip.replaceChildren(el('b', null, k.label), el('div', null, c + ' of ' + k.n + ' gave a ' + s + ' (' + Math.round((c / k.n) * 100) + '%)'), el('div', 't2', 'Average ' + fmt(k.avg) + ' · ' + k.top2 + '% rated 4 or 5'));
+        tip.hidden = false;
+        const r = host.getBoundingClientRect();
+        tip.style.left = Math.min(Math.max(0, ev.clientX - r.left + 12), host.clientWidth - tip.offsetWidth) + 'px';
+        tip.style.top = (ev.clientY - r.top + 14) + 'px';
+        rows.forEach((x) => x.classList.toggle('dim', x !== row));
+      });
+      seg.addEventListener('pointerleave', () => { tip.hidden = true; rows.forEach((x) => x.classList.remove('dim')); });
+      bar.append(seg);
+    });
+    row.append(el('div', 'lbl', k.label), bar, el('div', 'avg' + (k.avg === minAvg ? ' low' : ''), fmt(k.avg)));
+    rows.push(row);
+    host.append(row);
+  });
+})();
+
+// Session length
+(() => {
+  const host = document.getElementById('dur');
+  const opts = ['Too short', 'About right', 'Too long'];
+  const counts = opts.map((o) => DATA.filter((r) => r.duration === o).length);
+  const max = Math.max(...counts, 1);
+  opts.forEach((o, i) => {
+    const wrap = el('div');
+    const row = el('div', 'row');
+    const fill = el('div', 'fill');
+    fill.style.width = `calc(${(counts[i] / max) * 100}% - 70px)`;
+    fill.style.minWidth = counts[i] ? '2px' : '0';
+    fill.style.background = o === 'About right' ? 'var(--accent)' : o === 'Too short' ? 'var(--warn)' : 'var(--neutral)';
+    row.append(fill, el('span', 'val', counts[i] + ' (' + Math.round((counts[i] / DATA.length) * 100) + '%)'));
+    wrap.append(el('div', 'lbl', o), row);
+    host.append(wrap);
+  });
+})();
+
+// Division groups
+const band = (v) => (v == null ? '' : v >= 4.5 ? 'b5' : v >= 4 ? 'b4' : v >= 3.5 ? 'b3' : 'b2');
+(() => {
+  const groups = new Map();
+  DATA.forEach((r) => { const g = groupOf(r.division); if (!groups.has(g)) groups.set(g, []); groups.get(g).push(r); });
+  const list = [...groups.entries()].map(([group, rs]) => ({ group, rs })).sort((a, b) => b.rs.length - a.rs.length || a.group.localeCompare(b.group));
+  const tb = document.getElementById('groups');
+  list.forEach(({ group, rs }) => {
+    const tr = el('tr');
+    const tg = el('td'); tg.append(el('b', null, group)); tr.append(tg);
+    tr.append(el('td', 'divs', [...new Set(rs.map((r) => r.division))].sort().join(', ')), el('td', 'n', String(rs.length)));
+    METRICS.forEach((m) => { const v = mean(rs.map((r) => Number(r[m]))); const td = el('td', 'n'); td.append(el('span', 'sc ' + band(v), fmt(v))); tr.append(td); });
+    tr.append(el('td', 'n', String(rs.filter((r) => r.duration === 'Too short').length)));
+    tb.append(tr);
+  });
+})();
+
+// Responses table
+const state = { div: '', sort: null, dir: 1 };
+const TEXT_KEYS = ['division', 'duration', 'suggestion'];
+function renderRows() {
+  let rows = DATA.filter((r) => !state.div || r.division === state.div);
+  if (!state.sort) {
+    rows = rows.slice().sort((a, b) => groupOf(a.division).localeCompare(groupOf(b.division)) || a.division.localeCompare(b.division));
+  } else {
+    const num = !TEXT_KEYS.includes(state.sort);
+    rows = rows.slice().sort((a, b) => {
+      const va = num ? Number(a[state.sort]) : String(a[state.sort]).toLowerCase();
+      const vb = num ? Number(b[state.sort]) : String(b[state.sort]).toLowerCase();
+      return (va < vb ? -1 : va > vb ? 1 : 0) * state.dir;
+    });
+  }
+  const tb = document.getElementById('rows');
+  tb.replaceChildren();
+  const showGroups = !state.sort || state.sort === 'division';
+  const gc = new Map(); rows.forEach((r) => gc.set(groupOf(r.division), (gc.get(groupOf(r.division)) || 0) + 1));
+  let last = null;
+  rows.forEach((r) => {
+    const g = groupOf(r.division);
+    if (showGroups && g !== last) {
+      last = g;
+      const gh = el('tr', 'grp'); const td = el('td'); td.colSpan = 9;
+      td.append(el('b', null, g), ' · ' + gc.get(g) + (gc.get(g) === 1 ? ' response' : ' responses'));
+      gh.append(td); tb.append(gh);
+    }
+    const tr = el('tr');
+    tr.append(el('td', null, r.division));
+    METRICS.forEach((m) => { const td = el('td', 'n'); td.append(el('span', 'sc b' + r[m], r[m])); tr.append(td); });
+    const td = el('td'); td.append(el('span', 'pill' + (r.duration === 'Too short' ? ' short' : ''), r.duration)); tr.append(td);
+    tr.append(el('td', 'txt', r.suggestion));
+    tb.append(tr);
+  });
+  document.getElementById('count').textContent = 'Showing ' + rows.length + ' of ' + DATA.length;
+}
+(() => {
+  const sel = document.getElementById('div');
+  sel.append(new Option('All divisions', ''), ...[...new Set(DATA.map((r) => r.division))].sort().map((d) => new Option(d, d)));
+  sel.addEventListener('change', () => { state.div = sel.value; renderRows(); });
+  document.querySelectorAll('th.sortable').forEach((th) => {
+    const go = () => {
+      const k = th.dataset.k;
+      state.dir = state.sort === k ? -state.dir : (TEXT_KEYS.includes(k) ? 1 : -1);
+      state.sort = k;
+      document.querySelectorAll('th.sortable').forEach((h) => h.removeAttribute('aria-sort'));
+      th.setAttribute('aria-sort', state.dir === 1 ? 'ascending' : 'descending');
+      renderRows();
+    };
+    th.addEventListener('click', go);
+    th.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  renderRows();
+})();
+</script>
+</body>
+</html>
